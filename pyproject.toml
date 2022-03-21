@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "docmat"
+version = "0.1.0"
+description = "Python docstring formatter"
+authors = ["claudio.arcidiacono <claudio.arcidiacono@ing.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = ">=3.7,<4.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.1.1"
+black = "^22.1.0"
+flake8 = "^4.0.1"
+isort = "^5.10.1"
+pre-commit = "^2.17.0"
+bandit = "^1.7.4"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
