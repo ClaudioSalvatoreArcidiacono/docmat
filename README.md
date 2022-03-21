@@ -1,1 +1,3 @@
 # docmat
+
+Python docstring formatter.
