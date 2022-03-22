@@ -2,6 +2,7 @@ from textwrap import dedent
 
 import pytest
 from docmat.docstring_formats.google.docstring import GoogleDocString
+from docmat.docstring_formats.shared import IndentedSection, UnindentedSection
 
 TEST_INPUTS = [
     {
@@ -132,32 +133,86 @@ TEST_INPUTS = [
     {
         "test_input": dedent(
             """\
+                    '''
                     Fist text block.
 
+                    Section wrong indentation:
                     Second text block over
                     two lines
 
+                    Section correct indentation:
+                        Third text is 2 blank lines away
+                        and it is over
+                        3 lines
 
-                    Third text is 2 blank lines away
-                    and it is over
-                    3 lines
+                    Text with multiple levels
+                        other level here
+
                     '''
             """
         ).split("\n"),
-        "delimiter": "'''",
         "offset": 0,
-        "expected_output": [(0, 1), (2, 4), (6, 9)],
+        "expected_output": [
+            UnindentedSection(["Fist text block."], 60),
+            IndentedSection(
+                ["Section wrong indentation: Second text block over two lines"], 60
+            ),
+            IndentedSection(
+                [
+                    "Section correct indentation: Third text is 2 blank lines away"
+                    " and it is over 3 lines"
+                ],
+                60,
+            ),
+            UnindentedSection(["Text with multiple levels other level here"], 60),
+        ],
+    },
+    {
+        "test_input": dedent(
+            """\
+                    '''
+                    Fist text block.
+
+                    Section wrong indentation:
+                    Second text block over
+                    two lines
+
+                    Section correct indentation::
+                        Third text is 2 blank lines away
+                        and it is over
+
+                            3 lines
+
+                    Text with multiple levels
+                        other level here
+                    '''
+            """
+        ).split("\n"),
+        "offset": 0,
+        "expected_output": [
+            UnindentedSection(["Fist text block."], 60),
+            IndentedSection(
+                ["Section wrong indentation: Second text block over two lines"], 60
+            ),
+            IndentedSection(
+                [
+                    "Section correct indentation:: Third text is 2 blank lines away"
+                    " and it is over\n\n3 lines"
+                ],
+                60,
+            ),
+            UnindentedSection(["Text with multiple levels other level here"], 60),
+        ],
     },
 ]
-
 
 @pytest.mark.parametrize(
     list(TEST_INPUTS[0].keys()),
     [tuple(test_case.values()) for test_case in TEST_INPUTS],
 )
-def test_find_text_blocks(test_input, delimiter, offset, expected_output):
+def test_iter_elements(test_input, offset, expected_output):
     assert (
-        GoogleDocString.find_text_blocks(test_input, delimiter, offset)
+        list(GoogleDocString(test_input, line_length=60).iter_elements(offset))
         == expected_output
     )
 

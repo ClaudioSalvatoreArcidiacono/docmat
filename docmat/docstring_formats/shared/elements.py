@@ -41,10 +41,33 @@ class NewLine:
         return ""
 
 
-class TextBlock:
-    def __init__(self, text, line_length) -> None:
+class UnindentedSection:
+    def __init__(self, raw_lines, line_length) -> None:
+        text = " ".join(l.strip() for l in raw_lines)
         cleaned_text = clean_text(text)
         self.lines = TextWrapper(line_length).wrap(cleaned_text)
 
     def __str__(self) -> str:
         return "\n".join(self.lines) + "\n"
+
+    def __repr__(self) -> str:
+        return f"UnindentedSection({str(self)})"
+
+    def __eq__(self, __o: object) -> bool:
+        return str(self) == str(__o)
+
+
+class IndentedSection:
+    def __init__(self, raw_lines, line_length) -> None:
+        text = " ".join(l.strip() for l in raw_lines)
+        cleaned_text = clean_text(text)
+        self.lines = TextWrapper(line_length).wrap(cleaned_text)
+
+    def __str__(self) -> str:
+        return "\n".join(self.lines) + "\n"
+
+    def __repr__(self) -> str:
+        return f"IndentedSection({str(self)})"
+
+    def __eq__(self, __o: object) -> bool:
+        return str(self) == str(__o)
