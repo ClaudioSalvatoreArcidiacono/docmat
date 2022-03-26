@@ -1,8 +1,8 @@
 import argparse
 import glob
 
-from docstring_formats.google import GoogleDocString
-from file import FileHandler
+from docmat.docstring_formats.google import GoogleDocString
+from docmat.file import FileHandler
 
 
 def parse_args():
@@ -23,7 +23,9 @@ def parse_args():
 def format_file(file):
     handler = FileHandler(file)
     for offset, docstring_lines in handler.iter_doc():
-        docstring_lines_formatted = GoogleDocString(docstring_lines).format_docstring()
+        docstring_lines_formatted = GoogleDocString(
+            docstring_lines
+        ).get_formatted_docstring()
         handler.replace_lines(docstring_lines, docstring_lines_formatted, offset)
     handler.write_formatted_file()
 

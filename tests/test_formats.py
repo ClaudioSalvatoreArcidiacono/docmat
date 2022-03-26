@@ -4,7 +4,7 @@ import pytest
 from docmat.docstring_formats.google.docstring import GoogleDocString
 from docmat.docstring_formats.shared import IndentedSection, UnindentedSection
 
-TEST_INPUTS = [
+TEST_INPUTS_DETECT_SUMMARY = [
     {
         "test_input": ["'''summary line'''"],
         "wrap_summary": False,
@@ -29,12 +29,36 @@ TEST_INPUTS = [
         "line_length": 60,
         "expected_output": "'''Summary line.'''\n",
     },
+    {
+        "test_input": dedent(
+            """\
+                '''
+            summary line
+                '''
+            """
+        ).split("\n"),
+        "wrap_summary": False,
+        "line_length": 60,
+        "expected_output": "    '''Summary line.'''\n",
+    },
+    {
+        "test_input": dedent(
+            """\
+                '''
+            summary line
+                '''  
+            """  # In this test example blank spaces are left intentionally
+        ).split("\n"),
+        "wrap_summary": False,
+        "line_length": 60,
+        "expected_output": "    '''Summary line.'''\n",
+    },
 ]
 
 
 @pytest.mark.parametrize(
-    list(TEST_INPUTS[0].keys()),
-    [tuple(test_case.values()) for test_case in TEST_INPUTS],
+    list(TEST_INPUTS_DETECT_SUMMARY[0].keys()),
+    [tuple(test_case.values()) for test_case in TEST_INPUTS_DETECT_SUMMARY],
 )
 def test_detect_summary(test_input, wrap_summary, line_length, expected_output):
     assert (
@@ -42,7 +66,7 @@ def test_detect_summary(test_input, wrap_summary, line_length, expected_output):
     )
 
 
-TEST_INPUTS = [
+TEST_INPUTS_WRAP_SUMMARY = [
     {
         "test_input": ["'''Very long summary line which should not be wrapped.'''"],
         "wrap_summary": False,
@@ -120,8 +144,8 @@ TEST_INPUTS = [
 
 
 @pytest.mark.parametrize(
-    list(TEST_INPUTS[0].keys()),
-    [tuple(test_case.values()) for test_case in TEST_INPUTS],
+    list(TEST_INPUTS_WRAP_SUMMARY[0].keys()),
+    [tuple(test_case.values()) for test_case in TEST_INPUTS_WRAP_SUMMARY],
 )
 def test_wrap_summary(test_input, wrap_summary, line_length, expected_output):
     assert (
@@ -129,7 +153,7 @@ def test_wrap_summary(test_input, wrap_summary, line_length, expected_output):
     )
 
 
-TEST_INPUTS = [
+TEST_INPUTS_ITER_ELEMENTS = [
     {
         "test_input": dedent(
             """\
@@ -206,9 +230,10 @@ TEST_INPUTS = [
     },
 ]
 
+
 @pytest.mark.parametrize(
-    list(TEST_INPUTS[0].keys()),
-    [tuple(test_case.values()) for test_case in TEST_INPUTS],
+    list(TEST_INPUTS_ITER_ELEMENTS[0].keys()),
+    [tuple(test_case.values()) for test_case in TEST_INPUTS_ITER_ELEMENTS],
 )
 def test_iter_elements(test_input, offset, expected_output):
     assert (
@@ -217,7 +242,7 @@ def test_iter_elements(test_input, offset, expected_output):
     )
 
 
-TEST_INPUTS = [
+TEST_INPUTS_WRAP_TEXT_BLOCKS = [
     {
         "test_input": dedent(
             """\
@@ -275,8 +300,8 @@ TEST_INPUTS = [
 
 
 @pytest.mark.parametrize(
-    list(TEST_INPUTS[0].keys()),
-    [tuple(test_case.values()) for test_case in TEST_INPUTS],
+    list(TEST_INPUTS_WRAP_TEXT_BLOCKS[0].keys()),
+    [tuple(test_case.values()) for test_case in TEST_INPUTS_WRAP_TEXT_BLOCKS],
 )
 def test_wrap_text_blocks(test_input, wrap_summary, line_length, expected_output):
     assert (

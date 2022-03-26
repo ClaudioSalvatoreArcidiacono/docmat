@@ -30,7 +30,7 @@ class FileHandler:
                     if expression_lines[0].strip().startswith(
                         docstring_separator
                     ) and expression_lines[-1].strip().endswith(docstring_separator):
-                        yield expression_lines, start
+                        yield start, expression_lines
             for sub_element in element.body:
                 if type(sub_element) in (ast.ClassDef, ast.FunctionDef):
                     yield from recurse_yield(sub_element)

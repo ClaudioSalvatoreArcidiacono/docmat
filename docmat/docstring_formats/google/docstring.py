@@ -146,7 +146,7 @@ class GoogleDocString(BaseDocstring):
     def find_summary(self, lines):
         summary_starts = None
         for i, line in enumerate(lines):
-            if line == self._delimiter and summary_starts is None:
+            if line.strip() == self._delimiter and summary_starts is None:
                 continue
             if line:
                 if summary_starts is None:
