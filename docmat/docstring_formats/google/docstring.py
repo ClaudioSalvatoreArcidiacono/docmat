@@ -195,6 +195,9 @@ class GoogleDocString(BaseDocstring):
         return [self._indentation + line if line else line for line in lines]
 
     def __str__(self) -> str:
+        return "\n".join(self.get_formatted_docstring()) + "\n"
+
+    def get_formatted_docstring(self):
         if self._doc_fits_in_one_line():
             text_to_indent = [f"{self._elements[0]}{self._delimiter}"]
         else:
@@ -202,4 +205,4 @@ class GoogleDocString(BaseDocstring):
                 *flatten([el.lines for el in self._elements]),
                 self._delimiter,
             ]
-        return "\n".join(self._indent_lines(text_to_indent)) + "\n"
+        return self._indent_lines(text_to_indent)

@@ -28,7 +28,7 @@ class FileHandler:
                         yield from recurse_yield(sub_element)
 
         yield from recurse_yield(ast.parse(self._file_content))""",
-        ['        """Iterate over blocks of docstring"""'],
+        (['        """Iterate over blocks of docstring"""'], 12),
     ),
     (
         """from pathlib import Path
@@ -57,7 +57,7 @@ class FileHandler:
                         yield from recurse_yield(sub_element)
 
         yield from recurse_yield(ast.parse(self._file_content))""",
-        ['        """Iterate over blocks', '        of docstring"""'],
+        (['        """Iterate over blocks', '        of docstring"""'], 12),
     ),
     (
         """# utf-8
@@ -87,7 +87,7 @@ class FileHandler:
                         yield from recurse_yield(sub_element)
 
         yield from recurse_yield(ast.parse(self._file_content))""",
-        ['    """Iterate over blocks', '        of docstring"""'],
+        (['    """Iterate over blocks', '        of docstring"""'], 8),
     ),
     (
         """# utf-8
@@ -117,7 +117,7 @@ class FileHandler:
                         yield from recurse_yield(sub_element)
 
         yield from recurse_yield(ast.parse(self._file_content))""",
-        ['"""Iterate over blocks', '    of docstring"""'],
+        (['"""Iterate over blocks', '    of docstring"""'], 1),
     ),
     (
         """# utf-8
@@ -148,7 +148,7 @@ class FileHandler:
                         yield from recurse_yield(sub_element)
 
         yield from recurse_yield(ast.parse(self._file_content))""",
-        ['"""Test a blank line', "", '    of docstring"""'],
+        (['"""Test a blank line', "", '    of docstring"""'], 1),
     ),
 ]
 
@@ -161,11 +161,70 @@ def test_iter_doc(document_content, expected_outcome, tmp_path):
     test_file = tmp_path / "test"
     test_file.write_text(document_content)
 
-    assert next(FileHandler(test_file).iter_doc()) == expected_outcome
+    assert FileHandler(test_file).iter_doc() == [expected_outcome]
 
 
 def test_iter_doc_empty_file(tmp_path):
     test_file = tmp_path / "test"
     test_file.touch()
-    with pytest.raises(StopIteration):
-        next(FileHandler(test_file).iter_doc())
+    assert FileHandler(test_file).iter_doc() == []
+
+
+@pytest.mark.parametrize(
+    ["init_lines", "replace_params", "expected"],
+    [
+        (
+            ["a", "b", "c", "d"],
+            [{"old_lines": ["b"], "new_lines": ["foo"], "offset": 1}],
+            ["a", "foo", "c", "d"],
+        ),
+        (
+            ["a", "b", "c", "d"],
+            [
+                {"old_lines": ["b"], "new_lines": ["foo", "bar"], "offset": 1},
+                {"old_lines": ["c"], "new_lines": ["fizz"], "offset": 2},
+            ],
+            ["a", "foo", "bar", "fizz", "d"],
+        ),
+        (
+            ["a", "b", "c", "d"],
+            [
+                {"old_lines": ["b"], "new_lines": ["foo", "bar", "rat"], "offset": 1},
+                {"old_lines": ["c", "d"], "new_lines": ["fizz", "yyy"], "offset": 2},
+            ],
+            ["a", "foo", "bar", "rat", "fizz", "yyy"],
+        ),
+        (
+            ["a", "b", "|", "c", "d"],
+            [
+                {
+                    "old_lines": ["a", "b"],
+                    "new_lines": ["foo"],
+                    "offset": 0,
+                },
+                {"old_lines": ["c", "d"], "new_lines": ["fizz"], "offset": 3},
+            ],
+            [
+                "foo",
+                "|",
+                "fizz",
+            ],
+        ),
+    ],
+)
+def test_replace_lines(tmp_path, init_lines, replace_params, expected):
+    test_file = tmp_path / "test"
+    test_file.write_text("\n".join(init_lines))
+    handler = FileHandler(test_file)
+    for param in replace_params:
+        handler.replace_lines(**param)
+    assert handler.formatted_file_content == "\n".join(expected)
+
+
+def test_write_file(tmp_path):
+    test_file = tmp_path / "test"
+    test_file.write_text("\n".join(["a", "b", "c"]))
+    handler = FileHandler(test_file)
+    handler.replace_lines(["b"], ["foo"], 1)
+    handler.write_formatted_file()
+    assert test_file.read_text() == "\n".join(["a", "foo", "c"])
