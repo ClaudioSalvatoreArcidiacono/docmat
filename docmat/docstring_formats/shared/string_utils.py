@@ -16,12 +16,16 @@ def capitalize(line):
 
 
 def get_section_name(line):
-    match = re.match(r"^([^\n\:]+)\:$", line)
+    match = re.match(r"^([^\n\:]+)\:\:?$", line)
     if match:
         return match.group(1)
     else:
         return None
 
 
-def is_start_of_section(line):
+def count_indentation_level(line):
+    return len(line) - len(line.lstrip())
+
+
+def is_start_of_indented_section(line):
     return bool(get_section_name(line))
