@@ -177,18 +177,10 @@ TEST_INPUTS_ITER_ELEMENTS = [
         ).split("\n"),
         "offset": 0,
         "expected_output": [
-            UnindentedSection(["Fist text block."], 60),
-            IndentedSection(
-                ["Section wrong indentation: Second text block over two lines"], 60
-            ),
-            IndentedSection(
-                [
-                    "Section correct indentation: Third text is 2 blank lines away"
-                    " and it is over 3 lines"
-                ],
-                60,
-            ),
-            UnindentedSection(["Text with multiple levels other level here"], 60),
+            UnindentedSection,
+            IndentedSection,
+            IndentedSection,
+            UnindentedSection,
         ],
     },
     {
@@ -214,18 +206,10 @@ TEST_INPUTS_ITER_ELEMENTS = [
         ).split("\n"),
         "offset": 0,
         "expected_output": [
-            UnindentedSection(["Fist text block."], 60),
-            IndentedSection(
-                ["Section wrong indentation: Second text block over two lines"], 60
-            ),
-            IndentedSection(
-                [
-                    "Section correct indentation:: Third text is 2 blank lines away"
-                    " and it is over\n\n3 lines"
-                ],
-                60,
-            ),
-            UnindentedSection(["Text with multiple levels other level here"], 60),
+            UnindentedSection,
+            IndentedSection,
+            IndentedSection,
+            UnindentedSection,
         ],
     },
 ]
@@ -236,10 +220,10 @@ TEST_INPUTS_ITER_ELEMENTS = [
     [tuple(test_case.values()) for test_case in TEST_INPUTS_ITER_ELEMENTS],
 )
 def test_iter_elements(test_input, offset, expected_output):
-    assert (
-        list(GoogleDocString(test_input, line_length=60).iter_elements(offset))
-        == expected_output
-    )
+    assert [
+        type(el)
+        for el in GoogleDocString(test_input, line_length=60).iter_elements(offset)
+    ] == expected_output
 
 
 TEST_INPUTS_WRAP_TEXT_BLOCKS = [

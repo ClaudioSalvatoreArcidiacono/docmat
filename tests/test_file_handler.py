@@ -28,7 +28,7 @@ class FileHandler:
                         yield from recurse_yield(sub_element)
 
         yield from recurse_yield(ast.parse(self._file_content))""",
-        (['        """Iterate over blocks of docstring"""'], 12),
+        (12, ['        """Iterate over blocks of docstring"""']),
     ),
     (
         """from pathlib import Path
@@ -57,7 +57,7 @@ class FileHandler:
                         yield from recurse_yield(sub_element)
 
         yield from recurse_yield(ast.parse(self._file_content))""",
-        (['        """Iterate over blocks', '        of docstring"""'], 12),
+        (12, ['        """Iterate over blocks', '        of docstring"""']),
     ),
     (
         """# utf-8
@@ -87,7 +87,7 @@ class FileHandler:
                         yield from recurse_yield(sub_element)
 
         yield from recurse_yield(ast.parse(self._file_content))""",
-        (['    """Iterate over blocks', '        of docstring"""'], 8),
+        (8, ['    """Iterate over blocks', '        of docstring"""']),
     ),
     (
         """# utf-8
@@ -117,7 +117,7 @@ class FileHandler:
                         yield from recurse_yield(sub_element)
 
         yield from recurse_yield(ast.parse(self._file_content))""",
-        (['"""Iterate over blocks', '    of docstring"""'], 1),
+        (1, ['"""Iterate over blocks', '    of docstring"""']),
     ),
     (
         """# utf-8
@@ -148,7 +148,7 @@ class FileHandler:
                         yield from recurse_yield(sub_element)
 
         yield from recurse_yield(ast.parse(self._file_content))""",
-        (['"""Test a blank line', "", '    of docstring"""'], 1),
+        (1, ['"""Test a blank line', "", '    of docstring"""']),
     ),
 ]
 

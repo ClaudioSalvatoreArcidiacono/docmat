@@ -1,4 +1,3 @@
-import re
 from textwrap import dedent
 from typing import List
 
@@ -8,7 +7,6 @@ from docmat.docstring_formats.shared import (
     Summary,
     UnindentedSection,
 )
-from docmat.docstring_formats.shared.elements import NewLine
 from docmat.docstring_formats.shared.string_utils import (
     count_indentation_level,
     is_start_of_indented_section,
@@ -98,12 +96,12 @@ class GoogleDocString(BaseDocstring):
             if is_start_of_indented_section(lines[start]):
                 end = find_end_of_indented_section(start)
                 yield IndentedSection(
-                    lines[start:end], self._line_length - len(self._indentation) - 1
+                    lines[start:end], self._line_length - len(self._indentation)
                 )
             else:
                 end = find_end_of_unindented_section(start)
                 yield UnindentedSection(
-                    lines[start:end], self._line_length - len(self._indentation) - 1
+                    lines[start:end], self._line_length - len(self._indentation)
                 )
             offset = end
             start = next_start_element(offset)
