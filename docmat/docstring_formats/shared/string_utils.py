@@ -24,7 +24,7 @@ def get_section_name(line):
 
 
 def count_indentation_level(line):
-    return int((len(line) - len(line.lstrip())) / 4)
+    return len(line) - len(line.lstrip())
 
 
 def is_start_of_indented_section(line):

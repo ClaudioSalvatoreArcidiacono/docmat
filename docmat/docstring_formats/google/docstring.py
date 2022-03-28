@@ -27,6 +27,7 @@ class GoogleDocString(BaseDocstring):
         self._delimiter = self.get_docstring_delimiter(docstring_lines[0])
         self._indentation = self.get_indentation(docstring_lines[0], self._delimiter)
         self._dedented_lines = self.dedent_lines(docstring_lines)
+        self._line_length = line_length
         summary_starts, summary_ends = self.find_summary(self._dedented_lines)
         self._elements = [
             Summary(
@@ -36,18 +37,7 @@ class GoogleDocString(BaseDocstring):
                 delimiter=self._delimiter,
             )
         ]
-        text_blocks_idxs = self.find_text_blocks(
-            self._dedented_lines, self._delimiter, offset=summary_ends
-        )
-        for start, end in text_blocks_idxs:
-            self._elements.append(NewLine())
-            self._elements.append(
-                UnindentedSection(
-                    self._dedented_lines[start:end],
-                    line_length=line_length - len(self._indentation),
-                )
-            )
-        self._line_length = line_length
+        self._elements += list(self.iter_elements(summary_ends))
 
     def scroll_until(self, offset, condition):
         for i, line in enumerate(self._dedented_lines[offset:]):
@@ -107,10 +97,14 @@ class GoogleDocString(BaseDocstring):
         while start is not None:
             if is_start_of_indented_section(lines[start]):
                 end = find_end_of_indented_section(start)
-                yield IndentedSection(lines[start:end], self._line_length)
+                yield IndentedSection(
+                    lines[start:end], self._line_length - len(self._indentation) - 1
+                )
             else:
                 end = find_end_of_unindented_section(start)
-                yield UnindentedSection(lines[start:end], self._line_length)
+                yield UnindentedSection(
+                    lines[start:end], self._line_length - len(self._indentation) - 1
+                )
             offset = end
             start = next_start_element(offset)
 
@@ -201,8 +195,10 @@ class GoogleDocString(BaseDocstring):
         if self._doc_fits_in_one_line():
             text_to_indent = [f"{self._elements[0]}{self._delimiter}"]
         else:
-            text_to_indent = [
-                *flatten([el.lines for el in self._elements]),
-                self._delimiter,
-            ]
+            text_to_indent = []
+            for el in self._elements[:-1]:
+                text_to_indent += el.lines
+                text_to_indent += [""]
+            text_to_indent += self._elements[-1].lines
+            text_to_indent += [self._delimiter]
         return self._indent_lines(text_to_indent)
