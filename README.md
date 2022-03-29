@@ -1,6 +1,15 @@
+<!-- omit in TOC -->
 # docmat
 
 Python docstring formatter.
+
+- [Main Functionalities](#main-functionalities)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Supported docstring formats](#supported-docstring-formats)
+- [Examples](#examples)
+- [Integration with VSCode](#integration-with-vscode)
+- [Roadmap](#roadmap)
 
 ## Main Functionalities
 
@@ -72,14 +81,14 @@ Before:
 
 ```python
 def func():
-    """start with lower capital, dot missing"""
+    """start with lower letter, dot missing"""
 ```
 
 After:
 
 ```python
 def func():
-    """Start with lower capital, dot missing."""
+    """Start with lower letter, dot missing."""
 ```
 
 ---
@@ -179,12 +188,42 @@ def func(arg1, arg2):
     """
 ```
 
+## Integration with VSCode
+
+`docmat` will be integrated with `VSCode` using a dedicated extension (see also [roadmap](#roadmap)).
+
+In the meantime, `docmat` can be used from `VSCode` with a keyboard shortcut. Here are the steps to make it work:
+
+1. Install `docmat` in the python environment used by VSCode following the [installation steps](#installation)
+2. Open the Keyboard Shortcuts configuration file in VSCode `Preferences > Keyboard Shortcuts > Open Keyboard Shortcuts (JSON) [icon in the top-right]` this will open the `keybindings.json` file containing the keyboard shortcuts.
+3. Associate the docmat command to a key-binding by adding the following entry to the keybindings list:
+
+    ```json
+    [
+        {
+            "key": "shift+alt+d",
+            "command": "workbench.action.terminal.sendSequence",
+            "args": {
+                "text": "docmat '${file}'\u000D"
+            }
+        }
+    ]
+    ```
+
+    The suggested key-binding is `shift`+`alt`+`D`, but you can change it to whatever you like.
+
+4. Save the file.
+
+Now, every time you are working on a python file you can hit `shift`+`alt`+`D` and the `docmat` command will be executed in the VSCode terminal on the file that you have currently opened. Eventual errors or log messages will be shown there. Please note that the environment where `docmat` is installed should be active in the VSCode integrated terminal prior to using the shortcut.
+
 ## Roadmap
 
+- Add support for a no-format comment token.
 - Add support for bullet lists.
 - Add support for other docstring formats:
   - Numpydoc
   - reST
   - Epytext
 - Integrate with pre-commit.
-- Integrate with VSCode.
+- Create VSCode extension.
+- Add support for code examples in docstring.
