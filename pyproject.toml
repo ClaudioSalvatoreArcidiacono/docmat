@@ -1,9 +1,10 @@
 [tool.poetry]
 name = "docmat"
-version = "0.1.0"
+version = "0.1.0-alpha.0"
 description = "Python docstring formatter"
-authors = ["claudio.arcidiacono <claudio.arcidiacono@ing.com>"]
+authors = ["Claudio Salvatore Arcidiacono"]
 license = "MIT"
+readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.7,<4.0"
