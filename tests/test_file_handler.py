@@ -161,13 +161,13 @@ def test_iter_doc(document_content, expected_outcome, tmp_path):
     test_file = tmp_path / "test"
     test_file.write_text(document_content)
 
-    assert FileHandler(test_file).iter_doc() == [expected_outcome]
+    assert list(FileHandler(test_file).iter_doc()) == [expected_outcome]
 
 
 def test_iter_doc_empty_file(tmp_path):
     test_file = tmp_path / "test"
     test_file.touch()
-    assert FileHandler(test_file).iter_doc() == []
+    assert list(FileHandler(test_file).iter_doc()) == []
 
 
 @pytest.mark.parametrize(

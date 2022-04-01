@@ -31,14 +31,12 @@ def parse_args():
     return args
 
 
-def format_file(file, line_length):
-    handler = FileHandler(file)
+def format_file(handler, line_length):
     for offset, docstring_lines in handler.iter_doc():
         docstring_lines_formatted = GoogleDocString(
             docstring_lines, line_length=line_length
         ).get_formatted_docstring()
         handler.replace_lines(docstring_lines, docstring_lines_formatted, offset)
-    handler.write_formatted_file()
 
 
 def main():
@@ -47,8 +45,12 @@ def main():
     for file_glob in args.files:
         if os.path.isdir(file_glob):
             for file in Path(file_glob).rglob("*.py"):
-                format_file(str(file), line_length)
+                handler = FileHandler(str(file))
+                format_file(handler, line_length)
+                handler.write_formatted_file()
         else:
             for file in glob.glob(file_glob):
                 if fnmatch.fnmatch(file, "*.py"):
-                    format_file(file, line_length)
+                    handler = FileHandler(file)
+                    format_file(handler, line_length)
+                    handler.write_formatted_file()
