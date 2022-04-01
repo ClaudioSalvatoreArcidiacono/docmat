@@ -19,23 +19,23 @@ class FileHandler:
 
     def iter_doc(self):
         """Iterate over blocks of docstring."""
-
-        def recurse_yield(element):
-            if element.body and type(element.body[0]) is ast.Expr:
-                expression = element.body[0]
-                start = expression.lineno - 1
-                end = expression.end_lineno
-                expression_lines = self._file_lines[start:end]
-                for docstring_separator in ('"""', "'''"):
-                    if expression_lines[0].strip().startswith(
-                        docstring_separator
-                    ) and expression_lines[-1].strip().endswith(docstring_separator):
-                        yield start, expression_lines
-            for sub_element in element.body:
-                if type(sub_element) in (ast.ClassDef, ast.FunctionDef):
-                    yield from recurse_yield(sub_element)
-
-        return list(recurse_yield(ast.parse(self._initial_file_content)))
+        for element in ast.walk(ast.parse(self._initial_file_content)):
+            if type(element) in (
+                ast.AsyncFunctionDef,
+                ast.FunctionDef,
+                ast.ClassDef,
+                ast.Module,
+            ):
+                if docstring_text := ast.get_docstring(element):
+                    docstring = element.body[0]
+                    start = docstring.lineno - 1
+                    # end_lineno attribute not available in python 3.7
+                    length_docstring = len(docstring_text.split("\n"))
+                    end = start + length_docstring
+                    if self._file_lines[end - 1].strip()[-3:] in ('"""', "'''"):
+                        yield start, self._file_lines[start:end]
+                    else:
+                        yield start, self._file_lines[start : end + 1]
 
     def _calculate_new_file_offset(self, file_offset):
         for offset_shift in self._offset_shifts:
