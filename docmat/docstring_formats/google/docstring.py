@@ -36,8 +36,8 @@ class GoogleFormatter(BaseFormatter):
 
         Args:
             docstring_lines (List[str]): docstring lines to format.
-        line_length (int): maximum line length. Defaults to 88.
-        wrap_summary (bool): whether to wrap the summary line. Defaults to False
+            line_length (int): maximum line length. Defaults to 88.
+            wrap_summary (bool): whether to wrap the summary line. Defaults to False.
         """
         super().__init__()
         self._delimiter = self.get_docstring_delimiter(docstring_lines[0])
