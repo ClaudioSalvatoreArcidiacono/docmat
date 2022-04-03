@@ -1,2 +1,2 @@
-from .base import BaseDocstring  # noqa
+from .base import BaseFormatter  # noqa
 from .elements import IndentedSection, NewLine, Summary, UnindentedSection  # noqa

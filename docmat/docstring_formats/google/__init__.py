@@ -1,1 +1,1 @@
-from .docstring import GoogleDocString
+from .docstring import GoogleFormatter

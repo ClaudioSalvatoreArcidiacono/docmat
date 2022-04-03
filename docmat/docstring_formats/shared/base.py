@@ -1,6 +1,6 @@
 from abc import ABC
 
 
-class BaseDocstring(ABC):
+class BaseFormatter(ABC):
     def __init__(self) -> None:
         super().__init__()

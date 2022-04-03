@@ -1,8 +1,8 @@
 from textwrap import dedent
-from typing import List
+from typing import Any, Callable, List
 
 from docmat.docstring_formats.shared import (
-    BaseDocstring,
+    BaseFormatter,
     IndentedSection,
     Summary,
     UnindentedSection,
@@ -13,14 +13,32 @@ from docmat.docstring_formats.shared.string_utils import (
 )
 
 
-def flatten(t):
-    return [item for sublist in t for item in sublist]
+def flatten(list_of_lists: List[List[Any]]) -> List[Any]:
+    """Fatten a list of lists of items into a single list of items.
+
+    Args:
+        list_of_lists (List[List[Any]]): nested list of lists.
+
+    Returns:
+        List[Any]: flattend list of items.
+    """
+    return sum(list_of_lists, [])
 
 
-class GoogleDocString(BaseDocstring):
+class GoogleFormatter(BaseFormatter):
     def __init__(
-        self, docstring_lines: List[str], wrap_summary=True, line_length=88
+        self,
+        docstring_lines: List[str],
+        line_length: int = 88,
+        wrap_summary: bool = False,
     ) -> None:
+        """Class Constructor.
+
+        Args:
+            docstring_lines (List[str]): docstring lines to format.
+        line_length (int): maximum line length. Defaults to 88.
+        wrap_summary (bool): whether to wrap the summary line. Defaults to False
+        """
         super().__init__()
         self._delimiter = self.get_docstring_delimiter(docstring_lines[0])
         self._indentation = self.get_indentation(docstring_lines[0], self._delimiter)
@@ -37,11 +55,22 @@ class GoogleDocString(BaseDocstring):
         ]
         self._elements += list(self.iter_elements(summary_ends))
 
-    def scroll_until(self, offset, condition):
-        for i, line in enumerate(self._dedented_lines[offset:]):
+    def find_offset(self, from_offset: int, condition: Callable[[str], bool]) -> int:
+        """Find the next offset that satisfies a condition.
+
+        If no offset that satisfy the condition could be found, return the last offset.
+
+        Args:
+            from_offset (int): offset from which to start looking.
+            condition (Callable[[str], bool]): condition to check.
+
+        Returns:
+            int: offset that satisfies the condition or last offset.
+        """
+        for i, line in enumerate(self._dedented_lines[from_offset:]):
             if condition(line) or line == self._delimiter:
                 break
-        return offset + i
+        return from_offset + i
 
     def iter_elements(self, offset):
         lines = self._dedented_lines
@@ -49,7 +78,7 @@ class GoogleDocString(BaseDocstring):
         def find_end_of_indented_section(offset):
             section_title = lines[offset]
             if len(lines) > offset:
-                first_line_idx = self.scroll_until(offset + 1, bool)
+                first_line_idx = self.find_offset(offset + 1, bool)
                 first_line = lines[first_line_idx]
                 title_indentation_level = count_indentation_level(section_title)
                 first_line_indentation_level = count_indentation_level(first_line)
@@ -60,7 +89,7 @@ class GoogleDocString(BaseDocstring):
                     # Wrongly indented section
                     #
                     # Other section
-                    return self.scroll_until(first_line_idx, lambda line: not line)
+                    return self.find_offset(first_line_idx, lambda line: not line)
                 if title_indentation_level < first_line_indentation_level:
                     # Scroll until the indentation level is the same as the title
                     # matches the case:
@@ -68,7 +97,7 @@ class GoogleDocString(BaseDocstring):
                     #     Properly indented section
                     #     Properly indented section
                     # Other section
-                    return self.scroll_until(
+                    return self.find_offset(
                         first_line_idx,
                         lambda line: line
                         and count_indentation_level(line) <= title_indentation_level,
@@ -105,35 +134,6 @@ class GoogleDocString(BaseDocstring):
                 )
             offset = end
             start = next_start_element(offset)
-
-    @staticmethod
-    def find_text_blocks(lines, delimiter, offset):
-        def find_next_block(lines):
-            block_starts = None
-            for i, line in enumerate(lines):
-                if is_start_of_indented_section(line):
-                    if block_starts is not None:
-                        return block_starts, i
-                if line == delimiter or is_start_of_indented_section(line):
-                    if block_starts is not None:
-                        return block_starts, i
-                    else:
-                        return None
-                if line and block_starts is None:
-                    block_starts = i
-                if not line and block_starts is not None:
-                    return block_starts, i
-            return None
-
-        text_blocks = []
-        next_block = find_next_block(lines[offset:])
-        while next_block:
-            start, end = next_block
-            start, end = start + offset, end + offset
-            text_blocks.append((start, end))
-            offset = end + 1
-            next_block = find_next_block(lines[offset:])
-        return text_blocks
 
     def find_summary(self, lines):
         summary_starts = None

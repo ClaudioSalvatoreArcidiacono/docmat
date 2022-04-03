@@ -7,7 +7,14 @@ OffsetShift = namedtuple("OffsetShift", ["offset", "shift"])
 
 
 class FileHandler:
+    """Handle file I/O operations."""
+
     def __init__(self, path: str) -> None:
+        """Class constructor.
+
+        Args:
+            path (str): file path.
+        """
         self._file = Path(path)
         self._initial_file_content = self._file.read_text()
         self._file_lines = self._initial_file_content.split("\n")
@@ -37,18 +44,28 @@ class FileHandler:
                     else:
                         yield start, self._file_lines[start : end + 1]
 
-    def _calculate_new_file_offset(self, file_offset):
+    def _calculate_new_file_offset(self, file_offset: int):
         for offset_shift in self._offset_shifts:
             if file_offset >= offset_shift.offset:
                 file_offset += offset_shift.shift
         return file_offset
 
-    def _append_offset_shift(self, old_lines, new_lines, offset):
+    def _append_offset_shift(
+        self, old_lines: List[str], new_lines: List[str], offset: int
+    ):
         shift = len(new_lines) - len(old_lines)
         if shift != 0:
             self._offset_shifts.append(OffsetShift(offset + len(old_lines), shift))
 
-    def replace_lines(self, old_lines, new_lines, offset):
+    def replace_lines(self, old_lines: List[str], new_lines: List[str], offset: int):
+        """Replace lines of the file.
+
+        Args:
+            old_lines (List[str]): old lines to be replaced.
+            new_lines (List[str]): new lines to replace the old one.
+            offset (int): File offset (aka line number) where the old lines began in the
+                original file content.
+        """
         file_offset_start = self._calculate_new_file_offset(offset)
         file_offset_end = file_offset_start + len(old_lines)
         self._file_lines = (
@@ -59,4 +76,5 @@ class FileHandler:
         self._append_offset_shift(old_lines, new_lines, file_offset_start)
 
     def write_formatted_file(self):
+        """Overwrite the original file with the formatted file content."""
         self._file.write_text(self.formatted_file_content)

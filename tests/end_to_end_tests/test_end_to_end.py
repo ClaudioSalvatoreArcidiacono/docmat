@@ -13,5 +13,5 @@ from docmat.file import FileHandler
 def test_end_to_end(test_input_folder):
     handler = FileHandler(os.path.join(test_input_folder, "input.py"))
     expected_file = Path(test_input_folder) / "expected.py"
-    format_file(handler, 88)
+    format_file(handler, 88, False)
     assert handler.formatted_file_content == expected_file.read_text()

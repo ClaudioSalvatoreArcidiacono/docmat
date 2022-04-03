@@ -1,7 +1,7 @@
 from textwrap import dedent
 
 import pytest
-from docmat.docstring_formats.google.docstring import GoogleDocString
+from docmat.docstring_formats.google.docstring import GoogleFormatter
 from docmat.docstring_formats.shared import IndentedSection, UnindentedSection
 
 TEST_INPUTS_DETECT_SUMMARY = [
@@ -62,7 +62,12 @@ TEST_INPUTS_DETECT_SUMMARY = [
 )
 def test_detect_summary(test_input, wrap_summary, line_length, expected_output):
     assert (
-        str(GoogleDocString(test_input, wrap_summary, line_length)) == expected_output
+        str(
+            GoogleFormatter(
+                test_input, wrap_summary=wrap_summary, line_length=line_length
+            )
+        )
+        == expected_output
     )
 
 
@@ -149,7 +154,12 @@ TEST_INPUTS_WRAP_SUMMARY = [
 )
 def test_wrap_summary(test_input, wrap_summary, line_length, expected_output):
     assert (
-        str(GoogleDocString(test_input, wrap_summary, line_length)) == expected_output
+        str(
+            GoogleFormatter(
+                test_input, wrap_summary=wrap_summary, line_length=line_length
+            )
+        )
+        == expected_output
     )
 
 
@@ -222,7 +232,7 @@ TEST_INPUTS_ITER_ELEMENTS = [
 def test_iter_elements(test_input, offset, expected_output):
     assert [
         type(el)
-        for el in GoogleDocString(test_input, line_length=60).iter_elements(offset)
+        for el in GoogleFormatter(test_input, line_length=60).iter_elements(offset)
     ] == expected_output
 
 
@@ -289,5 +299,10 @@ TEST_INPUTS_WRAP_TEXT_BLOCKS = [
 )
 def test_wrap_text_blocks(test_input, wrap_summary, line_length, expected_output):
     assert (
-        str(GoogleDocString(test_input, wrap_summary, line_length)) == expected_output
+        str(
+            GoogleFormatter(
+                test_input, wrap_summary=wrap_summary, line_length=line_length
+            )
+        )
+        == expected_output
     )
