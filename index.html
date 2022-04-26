@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="None">
+  
+  
+  <link rel="shortcut icon" href="img/favicon.ico">
+  <title>Docmat</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Home";
+    var mkdocs_page_input_path = "index.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="js/jquery-2.1.1.min.js" defer></script>
+  <script src="js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href="." class="icon icon-home"> Docmat</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href=".">Home</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#main-functionalities">Main Functionalities</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#supported-docstring-formats">Supported docstring formats</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#integration-with-vscode">Integration with VSCode</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#roadmap">Roadmap</a>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href=".">Docmat</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Home</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+
+          <div role="main">
+            <div class="section">
+              
+                <!-- omit in TOC -->
+<h1 id="docmat">docmat</h1>
+<p>Python docstring formatter.</p>
+<h2 id="main-functionalities">Main Functionalities</h2>
+<ul>
+<li>Adjusts indentation and spacing.</li>
+<li>Wraps all docstring text.</li>
+</ul>
+<h2 id="installation">Installation</h2>
+<pre><code class="language-bash">pip install docmat
+</code></pre>
+<h2 id="usage">Usage</h2>
+<p>In order to format the docstring of a file, run in a terminal shell:</p>
+<pre><code class="language-bash">docmat &lt;filename&gt;|&lt;folder&gt;|&lt;glob&gt;
+</code></pre>
+<p>Examples:</p>
+<pre><code class="language-bash">docmat to_format.py
+</code></pre>
+<pre><code class="language-bash">docmat to_format.py other_file_to_format.py
+</code></pre>
+<pre><code class="language-bash">docmat to_format.py --line-length 79
+</code></pre>
+<pre><code class="language-bash">docmat directory
+</code></pre>
+<pre><code class="language-bash">docmat directory/*
+</code></pre>
+<h2 id="supported-docstring-formats">Supported docstring formats</h2>
+<ul>
+<li>Google</li>
+</ul>
+<p>Adding support for other docstring formats is in the Roadmap.</p>
+<h2 id="examples">Examples</h2>
+<p>Before:</p>
+<pre><code class="language-python">def func():
+    &quot;&quot;&quot;
+    This fits in one line.
+    &quot;&quot;&quot;
+</code></pre>
+<p>After:</p>
+<pre><code class="language-python">def func():
+    &quot;&quot;&quot;This fits in one line.&quot;&quot;&quot;
+</code></pre>
+<hr />
+<p>Before:</p>
+<pre><code class="language-python">def func():
+    &quot;&quot;&quot;start with lower letter, dot missing&quot;&quot;&quot;
+</code></pre>
+<p>After:</p>
+<pre><code class="language-python">def func():
+    &quot;&quot;&quot;Start with lower letter, dot missing.&quot;&quot;&quot;
+</code></pre>
+<hr />
+<p>Before:</p>
+<pre><code class="language-python">def func():
+    &quot;&quot;&quot;
+    In this docstring a newline after the summary is missing.
+    Summary and description should be separated by a newline.
+    &quot;&quot;&quot;
+</code></pre>
+<p>After:</p>
+<pre><code class="language-python">def func():
+    &quot;&quot;&quot;
+    In this docstring a newline after the summary is missing.
+
+    Summary and description should be separated by a newline.
+    &quot;&quot;&quot;
+</code></pre>
+<hr />
+<p>Before:</p>
+<pre><code class="language-python">def func():
+    &quot;&quot;&quot;
+    Summary.
+
+    The length of the function description in this specific function exceeds the maximum line length, that in this case is left to the default value `88`. This block of text should be wrapped.
+    &quot;&quot;&quot;
+</code></pre>
+<p>After:</p>
+<pre><code class="language-python">def func():
+    &quot;&quot;&quot;Summary.
+
+    The length of the function description in this specific function exceeds the maximum
+    line length, that in this case is left to the default value `88`. This block of text
+    should be wrapped.
+    &quot;&quot;&quot;
+</code></pre>
+<hr />
+<p>Adding the parameter <code>--wrap-summary</code></p>
+<p>Before:</p>
+<pre><code class="language-python">def func():
+    &quot;&quot;&quot;By default, the summary line is not wrapped even if it exceeds the maximum line length.
+
+    This behavior can be overriden by adding the `--wrap-summary` command line parameter
+    &quot;&quot;&quot;
+</code></pre>
+<p>After:</p>
+<pre><code class="language-python">def func():
+    &quot;&quot;&quot;By default, the summary line is not wrapped even if it exceeds the maximum line
+    length.
+
+    This behavior can be overriden by adding the `--wrap-summary` command line
+    parameter.
+    &quot;&quot;&quot;
+</code></pre>
+<hr />
+<p>Before:</p>
+<pre><code class="language-python">def func(arg1, arg2):
+    &quot;&quot;&quot;Summary.
+
+    args:
+    arg1(type): The indentation level of this argument is not correct.
+    arg2(type): In this case, the description of this argument exceeds the maximum line length and it needs to be wrapped.
+    &quot;&quot;&quot;
+</code></pre>
+<p>After:</p>
+<pre><code class="language-python">def func(arg1, arg2):
+    &quot;&quot;&quot;Summary.
+
+    Args:
+        arg1(type): The indentation level of this argument is not correct.
+        arg2(type): In this case, the description of this argument exceeds the maximum
+            line length and it needs to be wrapped.
+    &quot;&quot;&quot;
+</code></pre>
+<h2 id="integration-with-vscode">Integration with VSCode</h2>
+<p><code>docmat</code> will be integrated with <code>VSCode</code> using a dedicated extension (see also <a href="#roadmap">roadmap</a>).</p>
+<p>In the meantime, <code>docmat</code> can be used from <code>VSCode</code> with a keyboard shortcut. Here are the steps to make it work:</p>
+<ol>
+<li>Install <code>docmat</code> in the python environment used by VSCode following the <a href="#installation">installation steps</a></li>
+<li>Open the Keyboard Shortcuts configuration file in VSCode <code>Preferences &gt; Keyboard Shortcuts &gt; Open Keyboard Shortcuts (JSON) [icon in the top-right]</code> this will open the <code>keybindings.json</code> file containing the keyboard shortcuts.</li>
+<li>Associate the docmat command to a key-binding by adding the following entry to the keybindings list:</li>
+</ol>
+<pre><code class="language-json">[
+    {
+        &quot;key&quot;: &quot;shift+alt+d&quot;,
+        &quot;command&quot;: &quot;workbench.action.terminal.sendSequence&quot;,
+        &quot;args&quot;: {
+            &quot;text&quot;: &quot;docmat '${file}'\u000D&quot;
+        }
+    }
+]
+</code></pre>
+<pre><code>The suggested key-binding is `shift`+`alt`+`D`, but you can change it to whatever you like.
+</code></pre>
+<ol>
+<li>Save the file.</li>
+</ol>
+<p>Now, every time you are working on a python file you can hit <code>shift</code>+<code>alt</code>+<code>D</code> and the <code>docmat</code> command will be executed in the VSCode terminal on the file that you have currently opened. Eventual errors or log messages will be shown there. Please note that the environment where <code>docmat</code> is installed should be active in the VSCode integrated terminal prior to using the shortcut.</p>
+<h2 id="roadmap">Roadmap</h2>
+<ul>
+<li>Add support for a no-format comment token.</li>
+<li>Add support for bullet lists.</li>
+<li>Add support for other docstring formats:</li>
+<li>Numpydoc</li>
+<li>reST</li>
+<li>Epytext</li>
+<li>Integrate with pre-commit.</li>
+<li>Create VSCode extension.</li>
+<li>Add support for code examples in docstring.</li>
+</ul>
+              
+            </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script>var base_url = '.';</script>
+    <script src="js/theme_extra.js" defer></script>
+    <script src="js/theme.js" defer></script>
+      <script src="search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 1.2.3
+Build Date UTC : 2022-04-26 14:14:45.197444+00:00
+-->
