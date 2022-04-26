@@ -3,14 +3,6 @@
 
 Python docstring formatter.
 
-- [Main Functionalities](#main-functionalities)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Documentation](#documentation)
-- [Supported docstring formats](#supported-docstring-formats)
-- [Examples](#examples)
-- [Integration with VSCode](#integration-with-vscode)
-- [Roadmap](#roadmap)
 
 ## Main Functionalities
 
@@ -52,10 +44,6 @@ docmat directory
 ```bash
 docmat directory/*
 ```
-
-## Documentation
-
-Please find the documentation [here](https://claudiosalvatorearcidiacono.github.io/docmat/)
 
 ## Supported docstring formats
 
@@ -203,17 +191,17 @@ In the meantime, `docmat` can be used from `VSCode` with a keyboard shortcut. He
 2. Open the Keyboard Shortcuts configuration file in VSCode `Preferences > Keyboard Shortcuts > Open Keyboard Shortcuts (JSON) [icon in the top-right]` this will open the `keybindings.json` file containing the keyboard shortcuts.
 3. Associate the docmat command to a key-binding by adding the following entry to the keybindings list:
 
-    ```json
-    [
-        {
-            "key": "shift+alt+d",
-            "command": "workbench.action.terminal.sendSequence",
-            "args": {
-                "text": "docmat '${file}'\u000D"
-            }
+```json
+[
+    {
+        "key": "shift+alt+d",
+        "command": "workbench.action.terminal.sendSequence",
+        "args": {
+            "text": "docmat '${file}'\u000D"
         }
-    ]
-    ```
+    }
+]
+```
 
     The suggested key-binding is `shift`+`alt`+`D`, but you can change it to whatever you like.
 
