@@ -7,6 +7,11 @@ from pathlib import Path
 from docmat.file import FileHandler
 from docmat.google_format.docstring import GoogleFormatter
 
+ARGS_DEFAULT = {
+    "line_length": 88,
+    "wrap_summary": False,
+}
+
 
 def parse_args() -> argparse.Namespace:
     """Parse Command line arguments.
@@ -28,7 +33,7 @@ def parse_args() -> argparse.Namespace:
         "--line-length",
         dest="line_length",
         type=int,
-        default=88,
+        default=ARGS_DEFAULT["line_length"],
         help="Maximum line length",
     )
 
@@ -36,7 +41,7 @@ def parse_args() -> argparse.Namespace:
         "--wrap-summary",
         dest="wrap_summary",
         action="store_true",
-        default=False,
+        default=ARGS_DEFAULT["wrap_summary"],
         help="Whether to wrap the summary line so it will fit within the maximum line "
         "length",
     )

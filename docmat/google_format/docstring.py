@@ -26,7 +26,7 @@ class GoogleFormatter:
             self.dedented_lines,
             delimiter=self.delimiter,
             should_wrap=self.wrap_summary,
-            line_length=self.line_length,
+            line_length=self.line_length - len(self._indentation),
         )
         if summary:
             sections.append(summary)
@@ -42,7 +42,9 @@ class GoogleFormatter:
                             section,
                             end_section_offset,
                         ) = possible_section.from_raw_docstring(  # TODO
-                            left_to_parse, self.delimiter, line_length=self.line_length
+                            left_to_parse,
+                            self.delimiter,
+                            line_length=self.line_length - len(self._indentation),
                         )
                         sections.append(section)
                         left_to_parse = left_to_parse[end_section_offset:]
