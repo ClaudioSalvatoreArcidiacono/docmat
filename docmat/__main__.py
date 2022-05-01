@@ -4,8 +4,8 @@ import glob
 import os
 from pathlib import Path
 
-from docmat.docstring_formats.google import GoogleFormatter
 from docmat.file import FileHandler
+from docmat.google_format.docstring import GoogleFormatter
 
 
 def parse_args() -> argparse.Namespace:
@@ -54,11 +54,17 @@ def format_file(handler: FileHandler, line_length: int, wrap_summary: bool):
         line_length (int): maximum line length.
         wrap_summary (bool): whether to wrap the summary line.
     """
-    for offset, docstring_lines in handler.iter_doc():
+    for (
+        initial_start_offset,
+        initial_end_offset,
+        docstring_lines,
+    ) in handler.iter_doc():
         docstring_lines_formatted = GoogleFormatter(
             docstring_lines, line_length=line_length, wrap_summary=wrap_summary
-        ).get_formatted_docstring()
-        handler.replace_lines(docstring_lines, docstring_lines_formatted, offset)
+        ).format()
+        handler.replace_lines(
+            docstring_lines_formatted, initial_start_offset, initial_end_offset
+        )
 
 
 def main():
